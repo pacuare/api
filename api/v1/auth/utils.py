@@ -1,7 +1,7 @@
 from encodings.hex_codec import hex_decode
 from typing import Annotated
 
-from fastapi import Cookie, Depends
+from fastapi import Cookie, Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2AuthorizationCodeBearer
 
 from shared import db, enc
@@ -21,7 +21,8 @@ async def get_user(
     return None
 
 async def require_user(email: Annotated[str|None, Depends(get_user)]) -> str:
-    assert email is not None
+    if email is None:
+        raise HTTPException(403, "Forbidden")
     return email
 
 def get_user_database(email: str) -> str:
