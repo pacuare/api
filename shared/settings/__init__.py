@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     database_url: str
     resend_api_key: str
     fernet_key: str
-    cookie_domain: str = 'pacuare.dev'
+    cookie_domain: str = '.pacuare.dev'
 
     model_config = SettingsConfigDict(env_file=".env")
 
