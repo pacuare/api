@@ -32,3 +32,7 @@ def index(request: Request):
     return templates.TemplateResponse(request, 'index.html', {
         'versions': ['v1']
     })
+
+@app.get('/health')
+def health():
+    return 'ok'
