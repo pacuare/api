@@ -18,5 +18,5 @@ dependencies = [
 ]
 
 [tool.poe.tasks]
-migrate = "yoyo apply -d $DATABASE_URL"
+migrate = "yoyo apply -f -a -d $DATABASE_URL"
 start = "fastapi run main.py"
