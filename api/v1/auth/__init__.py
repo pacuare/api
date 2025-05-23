@@ -4,6 +4,7 @@ from fastapi import APIRouter, Cookie, Depends, HTTPException, Response
 from fastapi.params import Form
 from fastapi.responses import RedirectResponse
 
+from api.v1.auth.utils import require_user
 from shared import db, enc, mailer, settings
 
 
@@ -11,10 +12,10 @@ router = APIRouter()
 
 @router.get('/verify')
 async def generate_code(email: str):
-    has_user: bool = await db.query_one('select (count(*) > 0) from AuthorizedUsers where email=%s', email)
+    has_user: bool = await db.query_one('select (count(*) > 0) from AuthorizedUsers where email=%s', (email,))
 
     if not has_user:
-        return RedirectResponse('/')
+        raise HTTPException(403, 'Forbidden')
 
     await mailer.send_confirmation(email)
 
@@ -25,10 +26,12 @@ async def generate_code(email: str):
                 200: {'description': 'Successfully verified and set cookie'},
                 401: {'description': 'Verification failed'}
              })
-async def verify(email: str, code: Annotated[str, Form], response: Response, settings: Annotated[settings.Settings, Depends(settings.get)]):
-    expected_code: str = db.query_one('select code from LoginCodes where email=%s', (email,))
+async def verify(email: str, code: Annotated[str, Form()], response: Response, settings: Annotated[settings.Settings, Depends(settings.get)]):
+    expected_code: str = await db.query_one('select code from LoginCodes where email=%s', (email,))
     if expected_code.lower() == code.lower():
-        response.set_cookie('auth_status', hex_encode(enc.f.encrypt(email))[0], domain=settings.cookie_domain, max_age=259200, path='/', secure=True, httponly=True)
+        async with db.pool.connection() as conn:
+            await conn.execute('delete from LoginCodes where email=%s', (email,))
+        response.set_cookie('auth_status', enc.f.encrypt(bytes(email, 'utf-8')).hex(), domain=settings.cookie_domain, max_age=259200, path='/', secure=True, httponly=True)
         return 'ok'
     else:
         raise HTTPException(status_code=401, detail='Verification failed')
@@ -36,3 +39,7 @@ async def verify(email: str, code: Annotated[str, Form], response: Response, set
 @router.post('/logout')
 async def logout(response: Response, settings: Annotated[settings.Settings, Depends(settings.get)]):
     response.delete_cookie('auth_status', domain=settings.cookie_domain, path='/', secure=True, httponly=True)
+
+@router.get('/key')
+async def generate_key(description: str, email: Annotated[str, Depends(require_user)]) -> str:
+    return db.query_one[str]('insert into APIKeys (email, description) values ($1, $2) returning key', (email, description))

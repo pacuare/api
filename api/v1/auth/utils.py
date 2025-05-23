@@ -6,7 +6,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2Aut
 
 from shared import db, enc
 
-security_scheme = HTTPBearer()
+security_scheme = HTTPBearer(auto_error=False)
 
 async def get_user(
         auth_status: Annotated[str|None, Cookie()] = None,
@@ -14,7 +14,7 @@ async def get_user(
         ) -> str | None:
     
     if auth_status is not None:
-        return enc.f.decrypt(hex_decode(auth_status)[0])
+        return str(enc.f.decrypt(bytes.fromhex(auth_status)), 'utf-8')
     if api_key is not None:
         return await db.query_one[str]('select email from APIKeys where key = %s', api_key.credentials)
 

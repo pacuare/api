@@ -11,5 +11,5 @@ async def send_confirmation(email: str):
         'from': 'Pacuare Reserve <support@farthergate.com>',
         'to': [email],
         'subject': 'Login Confirmation',
-        'text': code
+        'text': 'Please use the code {} to log into Pacuare Reserve.'.format(code)
     })
