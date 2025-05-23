@@ -1,9 +1,8 @@
 from typing import Annotated, Any
-from fastapi import APIRouter, Cookie, Depends, HTTPException
-from psycopg import Connection
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from api.v1.auth.utils import get_user, require_user
+from api.v1.auth.utils import require_user
 from api.v1.query import user_db
 from shared import db
 

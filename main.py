@@ -11,7 +11,9 @@ async def lifespan(app: FastAPI):
     async with db.lifespan():
         yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+)
 
 app.mount('/v1', apiv1)
 
