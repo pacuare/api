@@ -32,7 +32,7 @@ async def verify(email: str, code: Annotated[str, Form()], response: Response, s
     if expected_code.lower() == code.lower():
         async with db.pool.connection() as conn:
             await conn.execute('delete from LoginCodes where email=%s', (email,))
-        response.set_cookie('auth_status', enc.f.encrypt(bytes(email, 'utf-8')).hex(), domain=settings.cookie_domain, max_age=259200, path='/', secure=True, httponly=True)
+        response.set_cookie('auth_status', enc.f.encrypt(bytes(email, 'utf-8')).hex(), domain=settings.cookie_domain, max_age=259200, path='/', secure=True, httponly=True, samesite='none')
         return 'ok'
     else:
         raise HTTPException(status_code=401, detail='Verification failed')
