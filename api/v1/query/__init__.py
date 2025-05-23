@@ -1,9 +1,9 @@
 from typing import Annotated, Any
-from fastapi import APIRouter, Cookie
+from fastapi import APIRouter, Cookie, Depends, HTTPException
 from psycopg import Connection
 from pydantic import BaseModel
 
-from api.v1.auth import get_user
+from api.v1.auth.utils import get_user, require_user
 from api.v1.query import user_db
 from shared import db
 
@@ -19,9 +19,7 @@ class QueryResponse(BaseModel):
     values: list[tuple[Any]]
 
 @router.post('')
-async def query(email_cookie: Annotated[str, Cookie()], req: QueryRequest) -> QueryResponse:
-    email = get_user(email_cookie)
-
+async def query(email: Annotated[str, Depends(require_user)], req: QueryRequest) -> QueryResponse:
     full_access = db.query_one[bool]('select fullAccess from AuthorizedUsers where email=%s', (email,))
     
     async with (db.pool.connection() if full_access else user_db.open(email)) as conn:

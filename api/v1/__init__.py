@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from . import auth, query
+
+from . import auth
+from . import query
 
 app = FastAPI()
 app.include_router(auth.router, prefix='/auth')

@@ -1,5 +1,6 @@
+from encodings.hex_codec import hex_encode
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Cookie, Depends, HTTPException, Response
 from fastapi.params import Form
 from fastapi.responses import RedirectResponse
 
@@ -27,18 +28,11 @@ async def generate_code(email: str):
 async def verify(email: str, code: Annotated[str, Form], response: Response, settings: Annotated[settings.Settings, Depends(settings.get)]):
     expected_code: str = db.query_one('select code from LoginCodes where email=%s', (email,))
     if expected_code.lower() == code.lower():
-        response.set_cookie('AuthStatus', enc.f.encrypt(email), domain=settings.cookie_domain, max_age=259200, path='/', secure=True, httponly=True)
+        response.set_cookie('auth_status', hex_encode(enc.f.encrypt(email))[0], domain=settings.cookie_domain, max_age=259200, path='/', secure=True, httponly=True)
         return 'ok'
     else:
         raise HTTPException(status_code=401, detail='Verification failed')
 
 @router.post('/logout')
 async def logout(response: Response, settings: Annotated[settings.Settings, Depends(settings.get)]):
-    response.delete_cookie('AuthStatus', domain=settings.cookie_domain, path='/', secure=True, httponly=True)
-
-def get_user(encrypted_cookie: str) -> str:
-    
-    return enc.f.decrypt(encrypted_cookie)
-
-def get_user_database(email: str) -> str:
-    return 'user_' + email.replace('@', '__').replace('.', '_')
+    response.delete_cookie('auth_status', domain=settings.cookie_domain, path='/', secure=True, httponly=True)
