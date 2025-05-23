@@ -13,13 +13,10 @@ dependencies = [
     "python-multipart>=0.0.20",
     "resend>=2.10.0",
     "yoyo-migrations>=9.0.0",
-]
-
-[dependency-groups]
-dev = [
-    "poethepoet>=0.34.0",
     "psycopg2-binary>=2.9.10",
+    "poethepoet>=0.34.0",
 ]
 
 [tool.poe.tasks]
 migrate = "yoyo apply -d $DATABASE_URL"
+start = "fastapi run main.py"
