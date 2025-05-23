@@ -10,6 +10,11 @@ from shared.settings import Settings
 
 router = APIRouter()
 
+@router.get('/exists')
+async def user_db_exists(email: Annotated[str, Depends(require_user)]):
+    db_name = utils.get_user_database(email)
+    return await db.query_one('select count(*)>0 from pg_catalog.pg_database where datname = %s', (db_name,))
+
 @router.post('/create',
              responses={
                  200: {'description': 'Successfully created and initialized user database.'},
@@ -18,7 +23,7 @@ router = APIRouter()
 async def create_user_db(email: Annotated[str, Depends(require_user)], settings: Annotated[Settings, Depends(settings.get)]):
     db_name = utils.get_user_database(email)
 
-    if await db.query_one('select count(*)>0 from pg_catalog.pg_database where datname = %s', (db_name,)):
+    if await user_db_exists(email):
         raise HTTPException(409, 'Database already exists')
 
     async with db.pool.connection() as conn:
