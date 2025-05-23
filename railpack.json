@@ -2,6 +2,6 @@
     "$schema": "https://schema.railpack.com",
     "provider": "python",
     "deploy": {
-        "startCommand": "uv run poe migrate && uv run poe start"
+        "startCommand": "poe migrate && poe start"
     }
 }
