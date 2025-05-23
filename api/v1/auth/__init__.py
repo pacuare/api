@@ -3,6 +3,7 @@ from typing import Annotated, Literal
 from fastapi import APIRouter, Cookie, Depends, HTTPException, Response
 from fastapi.params import Form
 from fastapi.responses import RedirectResponse
+from pydantic import BaseModel
 
 from api.v1.auth.utils import require_user
 from shared import db, enc, mailer, settings
@@ -36,10 +37,17 @@ async def verify(email: str, code: Annotated[str, Form()], response: Response, s
     else:
         raise HTTPException(status_code=401, detail='Verification failed')
 
+class AuthAccess(BaseModel):
+    email: str
+    access_level: Literal['full', 'restricted']
+
 @router.get('/access')
-async def access_level(email: Annotated[str, Depends(require_user)]) -> Literal['full', 'restricted']:
+async def access_level(email: Annotated[str, Depends(require_user)]) -> AuthAccess:
     full_access: bool = await db.query_one('select fullAccess from AuthorizedUsers where email=%s', (email,))
-    return 'full' if full_access else 'restricted'
+    return AuthAccess(
+        email= email,
+        access_level= 'full' if full_access else 'restricted'
+    )
 
 @router.post('/logout')
 async def logout(response: Response, settings: Annotated[settings.Settings, Depends(settings.get)]):
