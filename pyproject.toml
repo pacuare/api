@@ -21,3 +21,4 @@ dependencies = [
 [tool.poe.tasks]
 migrate = "yoyo apply -f -a -d $DATABASE_URL"
 start = "fastapi run main.py"
+dev = "fastapi dev main.py"
