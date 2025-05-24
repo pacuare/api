@@ -11,7 +11,7 @@ router = APIRouter()
 
 class QueryRequest(BaseModel):
     query: str
-    params: tuple[str] | None = None
+    params: list[str] | None = None
 
 class QueryResponse(BaseModel):
     columns: list[str]
@@ -22,7 +22,7 @@ async def query(email: Annotated[str, Depends(require_user)], req: QueryRequest)
     full_access: bool = await db.query_one('select fullAccess from AuthorizedUsers where email=%s', (email,))
     
     async with (db.pool.connection() if full_access else user_db.open(email)) as conn:
-        res = await conn.execute(req.query, req.params)
+        res = await conn.execute(req.query, tuple(req.params))
 
         return QueryResponse(
             columns=[c.name for c in res.description],
