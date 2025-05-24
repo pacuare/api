@@ -55,4 +55,20 @@ async def logout(response: Response, settings: Annotated[settings.Settings, Depe
 
 @router.get('/key')
 async def generate_key(description: str, email: Annotated[str, Depends(require_user)]) -> str:
-    return db.query_one[str]('insert into APIKeys (email, description) values ($1, $2) returning key', (email, description))
+    return await db.query_one('insert into APIKeys (email, description) values (%s, %s) returning key', (email, description))
+
+@router.delete('/key')
+async def delete_key(id: int, email: Annotated[str, Depends(require_user)]) -> int:
+    async with db.pool.connection() as conn:
+        await conn.execute('delete from APIKeys where id = %s and email = %s', (id, email))
+    return id
+
+@router.get('/keys')
+async def list_keys(email: Annotated[str, Depends(require_user)]) -> list[tuple[int, str, str]]:
+    async with db.pool.connection() as conn:
+        return await (await conn.execute("""
+            select id, description, to_char(createdOn, 'YYYY-MM-DD') as createdOn 
+                from APIKeys 
+                where email = %s
+                order by createdOn asc
+        """, (email,))).fetchall()
