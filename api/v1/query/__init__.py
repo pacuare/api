@@ -25,6 +25,6 @@ async def query(email: Annotated[str, Depends(require_user)], req: QueryRequest)
         res = await conn.execute(req.query, tuple(req.params))
 
         return QueryResponse(
-            columns=[c.name for c in res.description],
-            values=await res.fetchall()
+            columns=[c.name for c in res.description] if res.description != None else [],
+            values=(await res.fetchall()) if res.description != None else []
         )
