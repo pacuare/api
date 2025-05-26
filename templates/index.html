@@ -13,6 +13,10 @@
 <body>
     <main class="container" style="padding-top: 50px;">
         <h1>Documentation Versions</h1>
+        <article>
+            <header style="font-style: italic;">What's the difference between these links?</header>
+            Swagger UI provides interactive documentation, while ReDoc is a more readable, three-column layout.
+        </article>
         <ul>
             {% for v in versions %}
                 <li>{{ v }} &mdash; <a href="/{{v}}/docs">Swagger UI</a> | <a href="/{{v}}/redoc">ReDoc</a></li>
