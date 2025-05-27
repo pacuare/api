@@ -1,8 +1,6 @@
 from contextlib import asynccontextmanager
-from typing import Any
 from psycopg.abc import Params, Query
 from psycopg_pool import AsyncConnectionPool
-from os import environ
 
 from shared import settings
 

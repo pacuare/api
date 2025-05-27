@@ -1,5 +1,5 @@
 from typing import Annotated, Any
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Response
 from pydantic import BaseModel
 
 from api.v1.auth.utils import require_user
@@ -18,7 +18,8 @@ class QueryResponse(BaseModel):
     values: list[list[Any]]
 
 @router.post('')
-async def query(email: Annotated[str, Depends(require_user)], req: QueryRequest) -> QueryResponse:
+async def query(email: Annotated[str, Depends(require_user)], req: QueryRequest, hreq: Request, resp: Response) -> QueryResponse:
+    resp.headers['Access-Control-Allow-Origin'] = hreq.headers['Origin']
     full_access: bool = await db.query_one('select fullAccess from AuthorizedUsers where email=%s', (email,))
     
     async with (db.pool.connection() if full_access else user_db.open(email)) as conn:

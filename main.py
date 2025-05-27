@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
 from api.v1 import app as apiv1
 from shared import db
@@ -24,6 +24,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware('http')
+async def subdomain_cors(request: Request, call_next):
+    response: Response = await call_next(request)
+    if request.headers['Origin'].endswith('.pacuare.dev') and response.headers['Access-Control-Allow-Origin'] == '*':
+        response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
+    return response
 
 app.mount('/v1', apiv1)
 
