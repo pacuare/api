@@ -19,7 +19,7 @@ class QueryResponse(BaseModel):
 
 @router.post('')
 async def query(email: Annotated[str, Depends(require_user)], req: QueryRequest, hreq: Request, resp: Response) -> QueryResponse:
-    resp.headers['Access-Control-Allow-Origin'] = hreq.headers['Origin']
+    resp.headers['Access-Control-Allow-Origin'] = hreq.headers['Origin'] if 'Origin' in hreq.headers else '*'
     full_access: bool = await db.query_one('select fullAccess from AuthorizedUsers where email=%s', (email,))
     
     async with (db.pool.connection() if full_access else user_db.open(email)) as conn:
