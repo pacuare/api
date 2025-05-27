@@ -27,7 +27,7 @@ app.add_middleware(
 @app.middleware('http')
 async def subdomain_cors(request: Request, call_next):
     response: Response = await call_next(request)
-    if request.headers['Origin'].endswith('.pacuare.dev') and response.headers['Access-Control-Allow-Origin'] == '*':
+    if 'Origin' in request.headers and request.headers['Origin'].endswith('.pacuare.dev') and response.headers['Access-Control-Allow-Origin'] == '*':
         response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
     return response
 
