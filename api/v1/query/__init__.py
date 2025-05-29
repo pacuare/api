@@ -46,8 +46,24 @@ async def query(email: Annotated[str, Depends(require_user)], req: QueryRequest,
 async def query_form(email: Annotated[str, Depends(require_user)], req: Annotated[QueryRequest, Form()], hreq: Request, resp: Response) -> QueryResponse:
     return await query_base(email, req, hreq, resp)
 
-@router.post('.csv')
-async def query_csv(email: Annotated[str, Depends(require_user)], req: QueryRequest, hreq: Request) -> StreamingResponse:
+class CSVResponseClass(StreamingResponse):
+    media_type = 'text/csv'
+    openapi_response = {
+        'description': 'A CSV containing the results of your query',
+        'content': {
+            'text/csv': {
+                'schema': {
+                    'type': 'string',
+                    'example': """header1,header2
+value1,value2"""
+                }
+            }
+        }
+    }
+    
+
+@router.post('.csv', response_class=CSVResponseClass, responses={200: CSVResponseClass.openapi_response})
+async def query_csv(email: Annotated[str, Depends(require_user)], req: QueryRequest, hreq: Request, resp: CSVResponseClass):
     """Query the database, returning the response as a CSV table instead of JSON."""
     
     qres = await query_base(email, req, hreq, None)
@@ -55,12 +71,11 @@ async def query_csv(email: Annotated[str, Depends(require_user)], req: QueryRequ
     
     df = pd.DataFrame.from_records(qres.values, columns=qres.columns)
     df.to_csv(stream, index=False)
-    resp = StreamingResponse(iter([stream.getvalue()]), media_type='text/csv')
     set_query_headers(hreq, resp)
     resp.headers['Content-Disposition'] = 'attachment;filename=query.csv'
 
-    return resp
+    return stream.getvalue()
 
-@router.post('.csv/form')
-async def query_form_csv(email: Annotated[str, Depends(require_user)], req: Annotated[QueryRequest, Form()], hreq: Request) -> StreamingResponse:
-    return await query_csv(email, req, hreq)
+@router.post('.csv/form', response_class=CSVResponseClass, responses={200: CSVResponseClass.openapi_response})
+async def query_form_csv(email: Annotated[str, Depends(require_user)], req: Annotated[QueryRequest, Form()], hreq: Request, resp: CSVResponseClass):
+    return await query_csv(email, req, hreq, resp)
