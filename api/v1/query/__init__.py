@@ -1,4 +1,3 @@
-from enum import StrEnum
 import io
 from typing import Annotated, Any, Iterable, cast
 from fastapi import APIRouter, Depends, Form, Request, Response
@@ -47,7 +46,7 @@ async def query_form(email: Annotated[str, Depends(require_user)], req: Annotate
 async def query_csv(email: Annotated[str, Depends(require_user)], req: QueryRequest, hreq: Request) -> StreamingResponse:
     """Query the database, returning the response as a CSV table instead of JSON."""
     stream = io.StringIO()
-    resp = StreamingResponse(iter([stream.getvalue()]), media_type='text/csv')
+    resp = StreamingResponse(stream, media_type='text/csv')
     qres = await query_base(email, req, hreq, resp)
 
     df = pd.DataFrame.from_records(qres.values, columns=qres.columns)
