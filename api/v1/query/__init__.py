@@ -1,6 +1,6 @@
 import io
 from typing import Annotated, Any, Iterable, Sequence, cast
-from fastapi import APIRouter, Depends, Form, Request, Response
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import StreamingResponse
 from psycopg.abc import Query
 from pydantic import BaseModel
@@ -32,10 +32,18 @@ async def query_base(email: str, req: QueryRequest) -> QueryResponse:
             values=cast(list[list[Any]], await res.fetchall()) if res.description is not None else []
         )
 
-def extract_query(form_data: Annotated[QueryRequest | None, Form()] = None, json_data: QueryRequest | None = None) -> QueryRequest:
-    result = form_data if form_data is not None else json_data
-    assert result is not None
-    return result
+# Adapted from https://stackoverflow.com/a/74015930
+async def extract_query(req: Request) -> QueryRequest:
+    content_type = req.headers.get('Content-Type')
+    if content_type is None:
+        content_type = 'application/json'
+    if content_type == 'application/json':
+        return QueryRequest.model_validate(await req.json())
+    elif (content_type == 'application/x-www-form-urlencoded' or
+          content_type.startswith('multipart/form-data')):
+        return QueryRequest.model_validate(await req.form())
+    else:
+        raise HTTPException(400, 'Invalid Content-Type')
 
 @router.post('')
 async def query(email: Annotated[str, Depends(require_user)], req: Annotated[QueryRequest, Depends(extract_query)], hreq: Request, resp: Response) -> QueryResponse:
