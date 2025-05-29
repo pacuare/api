@@ -32,7 +32,7 @@ async def query_base(email: str, req: QueryRequest) -> QueryResponse:
             values=cast(list[list[Any]], await res.fetchall()) if res.description is not None else []
         )
 
-def extract_query(form_data: Annotated[QueryRequest | None, Form()], json_data: QueryRequest | None) -> QueryRequest:
+def extract_query(form_data: Annotated[QueryRequest | None, Form()] = None, json_data: QueryRequest | None = None) -> QueryRequest:
     result = form_data if form_data is not None else json_data
     assert result is not None
     return result
