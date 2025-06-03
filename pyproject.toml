@@ -17,6 +17,7 @@ dependencies = [
     "poethepoet>=0.34.0",
     "jinja2>=3.1.6",
     "pandas>=2.2.3",
+    "scalar-fastapi>=1.0.3",
 ]
 
 [tool.poe.tasks]
