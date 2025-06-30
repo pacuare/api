@@ -1,4 +1,3 @@
-from encodings.hex_codec import hex_decode
 from typing import Annotated
 
 from fastapi import Cookie, Depends, HTTPException
