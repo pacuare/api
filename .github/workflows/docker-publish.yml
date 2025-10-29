@@ -76,7 +76,7 @@ jobs:
 
       - name: Build image
         env:
-          TERM: xterm-256color
+          FORCE_COLOR: '1'
         run: |
           mise x -- railpack prepare . --plan-out ./railpack-plan.json --info-out ./railpack-info.json
           docker buildx build \
