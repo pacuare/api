@@ -40,7 +40,7 @@ jobs:
         uses: jdx/mise-action@v3.3.1
         with:
           tool_versions: |
-            railpack latest
+            ubi:railwayapp/railpack latest
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
