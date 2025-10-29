@@ -81,7 +81,7 @@ jobs:
             --build-arg BUILDKIT_SYNTAX="ghcr.io/railwayapp/railpack-frontend" \
             -f ./railpack-plan.json \
             --output type=docker,name=ghcr.io/pacuare/api \
-            $APP_DIR
+            .
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
