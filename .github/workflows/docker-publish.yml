@@ -76,7 +76,7 @@ jobs:
 
       - name: Build image
         run: |
-          ~/.local/share/mise/shims/railpack prepare . --plan-out ./railpack-plan.json --info-out ./railpack-info.json
+          mise x -- railpack prepare . --plan-out ./railpack-plan.json --info-out ./railpack-info.json
           docker buildx build \
             --build-arg BUILDKIT_SYNTAX="ghcr.io/railwayapp/railpack-frontend" \
             -f ./railpack-plan.json \
