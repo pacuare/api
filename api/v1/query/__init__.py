@@ -37,7 +37,7 @@ def set_query_headers(hreq: Request, resp: Response):
 async def query_base(
     email: str,
     req: QueryRequest,
-    settins: Settings,
+    settings: Settings,
     hreq: Request,
     resp: Response | None,
 ) -> QueryResponse:
@@ -57,10 +57,10 @@ async def query_base(
 
         return QueryResponse(
             columns=[c.name for c in res.description]
-            if res.description != None
+            if res.description is not None
             else [],
             values=cast(list[list[str]], await res.fetchall())
-            if res.description != None
+            if res.description is not None
             else [],
         )
 
@@ -111,12 +111,13 @@ value1,value2""",
 async def query_csv(
     email: Annotated[str, Depends(require_user)],
     req: QueryRequest,
+    settings: Annotated[Settings, Depends(settings.get)],
     hreq: Request,
     resp: CSVResponseClass,
 ):
     """Query the database, returning the response as a CSV table instead of JSON."""
 
-    qres = await query_base(email, req, hreq, None)
+    qres = await query_base(email, req, settings, hreq, None)
     stream = io.StringIO()
 
     df = pd.DataFrame.from_records(qres.values, columns=qres.columns)
@@ -135,7 +136,8 @@ async def query_csv(
 async def query_form_csv(
     email: Annotated[str, Depends(require_user)],
     req: Annotated[QueryRequest, Form()],
+    settings: Annotated[Settings, Depends(settings.get)],
     hreq: Request,
     resp: CSVResponseClass,
 ):
-    return await query_csv(email, req, hreq, resp)
+    return await query_csv(email, req, settings, hreq, resp)
