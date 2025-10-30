@@ -1,5 +1,4 @@
 import io
-from logging import info
 from typing import Annotated, Any, Iterable, cast
 from api.v1.auth import utils
 from fastapi import APIRouter, Depends, Form, Request, Response
@@ -47,7 +46,7 @@ async def query_base(
         "select fullAccess from AuthorizedUsers where email=%s", (email,)
     )
 
-    info(
+    print(
         "Querying on database "
         + (settings.database_data if full_access else utils.get_user_database(email))
     )
