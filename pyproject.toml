@@ -18,6 +18,7 @@ dependencies = [
     "jinja2>=3.1.6",
     "pandas>=2.2.3",
     "scalar-fastapi>=1.0.3",
+    "clerk-backend-api>=4.0.0",
 ]
 
 [tool.poe.tasks]

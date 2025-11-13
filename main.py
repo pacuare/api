@@ -1,9 +1,12 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request, Response
-from fastapi.templating import Jinja2Templates
-from api.v1 import app as apiv1
-from shared import db
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
+
+from api.v1 import app as apiv1
+from api.v2 import app as apiv2
+from shared import db
 
 templates = Jinja2Templates(directory='templates')
 
@@ -32,11 +35,12 @@ async def subdomain_cors(request: Request, call_next):
     return response
 
 app.mount('/v1', apiv1)
+app.mount('/v2', apiv2)
 
 @app.get('/')
 def index(request: Request):
     return templates.TemplateResponse(request, 'index.html', {
-        'versions': ['v1']
+        'versions': ['v2', 'v1']
     })
 
 @app.get('/health')

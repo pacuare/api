@@ -29,6 +29,7 @@ name = "api"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "clerk-backend-api" },
     { name = "cryptography" },
     { name = "fastapi", extra = ["standard"] },
     { name = "jinja2" },
@@ -46,6 +47,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "clerk-backend-api", specifier = ">=4.0.0" },
     { name = "cryptography", specifier = ">=45.0.2" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
     { name = "jinja2", specifier = ">=3.1.6" },
@@ -112,6 +114,22 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/44/96/392abd49b094d30b91d9fbda6a69519e95802250b777841cf3bda8fe136c/charset_normalizer-3.4.2-cp313-cp313-win32.whl", hash = "sha256:aaeeb6a479c7667fbe1099af9617c83aaca22182d6cf8c53966491a0f1b7ffb7", size = 98064, upload-time = "2025-05-02T08:33:17.06Z" },
     { url = "https://files.pythonhosted.org/packages/e9/b0/0200da600134e001d91851ddc797809e2fe0ea72de90e09bec5a2fbdaccb/charset_normalizer-3.4.2-cp313-cp313-win_amd64.whl", hash = "sha256:aa6af9e7d59f9c12b33ae4e9450619cf2488e2bbe9b44030905877f0b2324980", size = 105641, upload-time = "2025-05-02T08:33:18.753Z" },
     { url = "https://files.pythonhosted.org/packages/20/94/c5790835a017658cbfabd07f3bfb549140c3ac458cfc196323996b10095a/charset_normalizer-3.4.2-py3-none-any.whl", hash = "sha256:7f56930ab0abd1c45cd15be65cc741c28b1c9a34876ce8c17a2fa107810c0af0", size = 52626, upload-time = "2025-05-02T08:34:40.053Z" },
+]
+
+[[package]]
+name = "clerk-backend-api"
+version = "4.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cryptography" },
+    { name = "httpcore" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "pyjwt" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3f/9f/d95ce5694bb9b606d33590490b179c9a875fde4c6cefa9b93a2604d2640c/clerk_backend_api-4.0.0.tar.gz", hash = "sha256:29a29a1cf4c5584fb9c18fdb23b7311276ea9f1ff3d4a263628d28d9041e8b22", size = 197311, upload-time = "2025-11-10T21:22:00.635Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/70/93/6532a0485f0711b5304b78397b0952519e2575836345ca73c9ca09dae3eb/clerk_backend_api-4.0.0-py3-none-any.whl", hash = "sha256:9f9031f493ceb98efc8e94e20ca215b029cc67afd37cea4ec075e28ec0dd8aa7", size = 400398, upload-time = "2025-11-10T21:21:59.102Z" },
 ]
 
 [[package]]
@@ -588,6 +606,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/7c/2d/c3338d48ea6cc0feb8446d8e6937e1408088a72a39937982cc6111d17f84/pygments-2.19.1.tar.gz", hash = "sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f", size = 4968581, upload-time = "2025-01-06T17:26:30.443Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8a/0b/9fcc47d19c48b59121088dd6da2488a49d5f72dacf8262e2790a1d2c7d15/pygments-2.19.1-py3-none-any.whl", hash = "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c", size = 1225293, upload-time = "2025-01-06T17:26:25.553Z" },
+]
+
+[[package]]
+name = "pyjwt"
+version = "2.10.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/46/bd74733ff231675599650d3e47f361794b22ef3e3770998dda30d3b63726/pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953", size = 87785, upload-time = "2024-11-28T03:43:29.933Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/ad/689f02752eeec26aed679477e80e632ef1b682313be70793d798c1d5fc8f/PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb", size = 22997, upload-time = "2024-11-28T03:43:27.893Z" },
 ]
 
 [[package]]

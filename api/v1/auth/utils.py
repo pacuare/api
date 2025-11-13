@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Cookie, Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2AuthorizationCodeBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from shared import db, enc
 
@@ -11,7 +11,7 @@ async def get_user(
         auth_status: Annotated[str|None, Cookie()] = None,
         api_key: Annotated[HTTPAuthorizationCredentials|None, Depends(security_scheme)] = None
         ) -> str | None:
-    
+
     if auth_status is not None:
         return str(enc.f.decrypt(bytes.fromhex(auth_status)), 'utf-8')
     if api_key is not None:
@@ -26,3 +26,4 @@ async def require_user(email: Annotated[str|None, Depends(get_user)]) -> str:
 
 def get_user_database(email: str) -> str:
     return 'user_' + email.replace('@', '__').replace('.', '_')
+
