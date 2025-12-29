@@ -1,13 +1,20 @@
 {% import "icons.html" as icons %}
+
+{% macro banner(danger) -%}
+{% set color_styles = 'border-red-500 text-red-800 bg-red-100 dark:bg-red-900 dark:text-red-100' if danger else 'border-green-500 text-green-800 bg-green-100 dark:text-green-200 dark:bg-green-900' %}
+<div class="flex flex-1 flex-row gap-2 items-center border {{color_styles}} rounded-md px-3 py-2">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
 {% macro access_banner(email, full_access) -%}
 {% set access_s = 'full access' if full_access else 'restricted access' %}
-{% set color_styles = 'border-red-500 text-red-800 bg-red-100 dark:bg-red-900 dark:text-red-100' if full_access else 'border-green-500 text-green-800 bg-green-100 dark:text-green-200 dark:bg-green-900' %}
-<div class="flex flex-1 flex-row gap-2 items-center border {{color_styles}} rounded-md px-3 py-2">
+{% call banner(danger=full_access) %}
     {% if full_access %}
     {{icons.shield_alert()}}
     {% else %}
     {{icons.shield_check()}}
     {% endif %}
     {{email}} &mdash; {{access_s}}
-</div>
+{% endcall %}
 {% endmacro %}

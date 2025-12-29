@@ -51,10 +51,10 @@ async def index(request: Request, user: Annotated[str|None, Depends(get_user)] =
     })
 
 @app.get('/login')
-def login_page(request: Request, user: Annotated[str|None, Depends(get_user)] = None, return_to: Annotated[str, Query(alias="return")] = "/", error: bool = False):
+def login_page(request: Request, user: Annotated[str|None, Depends(get_user)] = None, return_to: Annotated[str, Query(alias="return")] = "/", error: bool = False, embedded: bool = False):
     if user is not None:
         return RedirectResponse(return_to)
-    return templates.TemplateResponse(request, 'login.html', {'return_to': return_to, 'error': error})
+    return templates.TemplateResponse(request, 'login.html', {'return_to': return_to, 'error': error, 'embedded': embedded})
 
 @app.get('/account')
 def account_page(
