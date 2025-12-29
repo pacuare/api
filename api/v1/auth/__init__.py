@@ -80,7 +80,7 @@ async def delete_key(id: int, email: Annotated[str, Depends(require_user)]) -> i
 async def list_keys(email: Annotated[str, Depends(require_user)]) -> list[tuple[int, str, str]]:
     async with db.pool.connection() as conn:
         return await (await conn.execute("""
-            select id, description, to_char("createdOn", 'YYYY-MM-DD') as "createdOn"
+            select id, description, to_char(createdOn, 'YYYY-MM-DD') as "createdOn"
                 from APIKeys
                 where email = %s
                 order by "createdOn" asc
