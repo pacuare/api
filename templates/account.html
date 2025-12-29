@@ -18,6 +18,7 @@
     <p>Please wait...</p>
 </template>
 
+{% if not full_access %}
 <article x-data="personalDb">
     <h2>Personal Database</h2>
     {% if has_db %}
@@ -27,10 +28,11 @@
         <button @click="recreate" class="contrast">Recreate</button>
     </div>
     {% else %}
-    <small>Your personal database does not exist. Create it to start running queries.</small>
+    <small style="display:block;margin-bottom: 10px;">Your personal database does not exist. Create it to start running queries.</small>
     <button @click="create" style="display:block">Create</button>
     {% endif %}
 </article>
+{% endif %}
 
 <script>window.serverApiKeys = {{api_keys|tojson}}</script>
 <article x-data="apiKeys">
