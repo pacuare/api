@@ -1,0 +1,25 @@
+{% macro scripts() -%}
+<script src="/js/otp.js"></script>
+{%- endmacro %}
+{% macro otp_input(name) -%}
+{# https://lexingtonthemes.com/blog/how-to-build-an-otp-input-group-with-tailwind-css-and-alpinejs #}
+<div class="grid" x-data="otpInput" style="position: relative" >
+    <input
+        id="{{name}}"
+        name="{{name}}"
+        type="text"
+        autocomplete="one-time-code"
+        maxlength="6"
+        x-model="value"
+        x-on:input="onInput"
+        x-on:focus="isFocused = true"
+        x-on:blur="isFocused = false"
+        style="position: absolute; inset: 0; z-index: 10; width: 100%; height: 100%; opacity: 0;
+         cursor: text;"
+        aria-label="Verification Code"
+    />
+    <template x-for="(digit, i) in digits" x-bind:key="i">
+        <input readonly :value="digit" style="text-align: center" :style="{outline: isFocused && value.length == i && 'var(--pico-outline-width) solid var(--pico-primary-focus)'}">
+    </template>
+</div>
+{%- endmacro %}

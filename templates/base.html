@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="light dark" />
+        <link
+            rel="stylesheet"
+            href="/vendor/pico.jade.min.css"
+        />
+        <link rel="stylesheet" href="/css/tailwind.css">
+        <script src="/vendor/alpine.min.js" defer></script>
+        {% block head %}{% endblock %}
+        <title>{% block title %}{% endblock %} — Pacuare</title>
+    </head>
+    <body>
+        <main class="container pt-10">
+            {% block content %}{% endblock %}
+        </main>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

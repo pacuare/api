@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% import "partials.html" as partials %}
+{% import "icons.html" as icons %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+{{partials.access_banner(email=user, full_access=full_access)}}
+<hr>
+<template x-if="loading">
+    <p>Please wait...</p>
+</template>
+
+<article x-data="personalDb">
+    <h2>Personal Database</h2>
+    {% if has_db %}
+    <small style="display:block;margin-bottom: 10px;">Keep your database in sync with the master copy.</small>
+    <div role="group">
+        <button @click="refresh" class="secondary">Refresh</button>
+        <button @click="recreate" class="contrast">Recreate</button>
+    </div>
+    {% else %}
+    <small>Your personal database does not exist. Create it to start running queries.</small>
+    <button @click="create" style="display:block">Create</button>
+    {% endif %}
+</article>
+
+<script>window.serverApiKeys = {{api_keys|tojson}}</script>
+<article x-data="apiKeys">
+    <h2>API Keys</h2>
+    <template x-if="newKey">
+        <div>
+            <hr>
+            <em>Your new key is <code x-text="newKey"></code>. It will not be shown again.</em>
+            <hr>
+        </div>
+    </template>
+    <ul style="list-style-type: none !important;">
+        <template x-for="key in keys">
+            <li style="list-style-type: none !important;" class="flex flex-row justify-between items-center">
+                <p x-text="key.description" class="mb-0!"></p>
+                <button @click="deleteKey" x-bind:data-id="key.id" class="block" style="
+                    --pico-primary-background: red;
+                    --pico-primary-border: red;
+                    --pico-primary-hover-background: #aa0000;
+                    --pico-primary-hover-border: #aa0000;"
+                >{{icons.trash()}}</button>
+            </li>
+        </template>
+        <hr>
+        <form role="group" onsubmit="event.preventDefault()">
+            <input x-model="desc" placeholder="Description">
+            <button @click="create">New</button>
+        </form>
+    </ul>
+</article>
+
+<script src="/js/account.js"></script>
+{% endblock %}

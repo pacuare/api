@@ -14,7 +14,7 @@ dependencies = [
     "resend>=2.10.0",
     "yoyo-migrations>=9.0.0",
     "psycopg2-binary>=2.9.10",
-    "poethepoet>=0.34.0",
+    "poethepoet>=0.39.0",
     "jinja2>=3.1.6",
     "pandas>=2.2.3",
     "scalar-fastapi>=1.0.3",
@@ -24,4 +24,9 @@ dependencies = [
 [tool.poe.tasks]
 migrate = "yoyo apply -f -a -d $DATABASE_URL"
 start = "fastapi run main.py"
-dev = "fastapi dev main.py"
+start-dev = "fastapi dev main.py"
+tailwind = "tailwindcss -i tailwind.css -o static/css/tailwind.css"
+tailwind-dev.ref = "tailwind -w"
+
+[tool.poe.tasks.dev]
+parallel = ["start-dev", "tailwind-dev"]

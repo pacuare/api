@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% block title %}Log In{% endblock title %}
+{% block content %}
+<h1>Log In</h1>
+<form x-data="loginForm" action="/v1/auth/verify" method="post">
+    <input type="hidden" name="return_to" value="{{ return or '/' }}">
+    <fieldset>
+        <label>
+            Email
+            <input type="email" name="email" x-model="email">
+        </label>
+        <template x-if="!otpVisible">
+            <button @click="sendOtp" style="display:block;width:100%">Log In</button>
+        </template>
+        <template x-if="otpVisible">
+            <div>
+                <label for="code">Verification Code</label>
+                {{ forms.otp_input("code") }}
+                <button type="submit">Log In</button>
+            </div>
+        </template>
+    </fieldset>
+</form>
+<script src="/js/login.js"></script>
+{{ forms.scripts() }}
+{% endblock %}

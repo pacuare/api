@@ -1,18 +1,17 @@
 import io
 from typing import Annotated, Any, Iterable, cast
-from api.v1.auth import utils
+
+import pandas as pd
 from fastapi import APIRouter, Depends, Form, Request, Response
 from fastapi.responses import StreamingResponse
 from psycopg.abc import Query
 from pydantic import BaseModel
-import pandas as pd
 
+from api.v1.auth import utils
 from api.v1.auth.utils import require_user
 from api.v1.db import user_db
-from shared import db
-from shared import settings
+from shared import db, settings, templates
 from shared.settings import Settings
-
 
 router = APIRouter()
 
@@ -43,7 +42,7 @@ async def query_base(
     if resp is not None:
         set_query_headers(hreq, resp)
     full_access: bool = await db.query_one(
-        "select fullAccess from AuthorizedUsers where email=%s", (email,)
+        'select "fullAccess" from "AuthorizedUsers" where email=%s', (email,)
     )
 
     print(
@@ -74,6 +73,9 @@ async def query(
 ) -> QueryResponse:
     return await query_base(email, req, settings, hreq, resp)
 
+@router.post("/html")
+def query_html(req: Request, resp: Annotated[QueryResponse, Depends(query)]):
+    return templates.TemplateResponse(req, 'table.html', {'columns': resp.columns, 'rows': resp.values})
 
 @router.post("/form")
 async def query_form(

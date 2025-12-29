@@ -1,7 +1,18 @@
 {
-    "$schema": "https://schema.railpack.com",
-    "provider": "python",
-    "deploy": {
-        "startCommand": "poe migrate && poe start"
+  "$schema": "https://schema.railpack.com",
+  "provider": "python",
+  "packages": {
+    "github:tailwindlabs/tailwindcss": "latest"
+  },
+  "steps": {
+    "build": {
+      "commands": [
+        "...",
+        "poe tailwind"
+      ]
     }
+  },
+  "deploy": {
+    "startCommand": "poe migrate && poe start"
+  }
 }

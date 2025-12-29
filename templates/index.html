@@ -1,25 +1,22 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="color-scheme" content="light dark" />
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-        />
-        <title>Pacuare API</title>
-    </head>
-    <body>
-        <main class="container" style="padding-top: 50px">
-            <h1>Documentation Versions</h1>
-            <ul>
-                {% for v in versions %}
-                <li>
-                    {{ v }} &mdash; <a href="/{{v}}/scalar">Documentation</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </main>
-    </body>
-</html>
+{% extends "base.html" %}
+{% import "partials.html" as partials %}
+{% block title %}API Documentation{% endblock %}
+{% block content %}
+{% if user %}
+{{partials.access_banner(email=user, full_access=full_access)}}
+<hr>
+<a href="/account">Account Settings</a> |
+<a href="/v1/auth/logout">Sign Out</a>
+<hr>
+{% else %}
+<a href="/login">Sign In</a>
+{% endif %}
+<h1>Documentation Versions</h1>
+<ul>
+    {% for v in versions %}
+    <li>
+        {{ v }} &mdash; <a href="/{{v}}/scalar">Documentation</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
