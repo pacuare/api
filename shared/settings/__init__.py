@@ -10,7 +10,6 @@ class Settings(BaseSettings):
     resend_api_key: str
     fernet_key: str
     cookie_domain: str = '.pacuare.dev'
-    clerk_secret_key: str
 
     model_config = SettingsConfigDict(env_file=".env")
 

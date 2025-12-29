@@ -11,7 +11,6 @@ from api.v1 import app as apiv1
 from api.v1.auth import AuthAccess, access_level, list_keys
 from api.v1.auth.utils import get_user, require_user
 from api.v1.db import user_db_exists
-from api.v2 import app as apiv2
 from shared import db, templates
 
 
@@ -40,14 +39,13 @@ async def subdomain_cors(request: Request, call_next):
     return response
 
 app.mount('/v1', apiv1)
-app.mount('/v2', apiv2)
 
 @app.get('/')
 async def index(request: Request, user: Annotated[str|None, Depends(get_user)] = None):
     return templates.TemplateResponse(request, 'index.html', {
         'user': user,
         'full_access': (await access_level(user)).access_level == 'full' if user else None,
-        'versions': ['v2', 'v1']
+        'versions': ['v1']
     })
 
 @app.get('/login')
