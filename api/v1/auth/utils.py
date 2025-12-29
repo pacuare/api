@@ -15,7 +15,7 @@ async def get_user(
     if auth_status is not None:
         return str(enc.f.decrypt(bytes.fromhex(auth_status)), 'utf-8')
     if api_key is not None:
-        return await db.query_one('select email from "APIKeys" where key = %s', (api_key.credentials,))
+        return await db.query_one('select email from APIKeys where key = %s', (api_key.credentials,))
 
     return None
 

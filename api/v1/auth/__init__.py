@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.get('/verify')
 async def generate_code(email: str):
-    has_user: bool = await db.query_one('select (count(*) > 0) from "AuthorizedUsers" where email=%s', (email,))
+    has_user: bool = await db.query_one('select (count(*) > 0) from AuthorizedUsers where email=%s', (email,))
 
     if not has_user:
         raise HTTPException(403, 'Forbidden')
@@ -28,7 +28,7 @@ async def generate_code(email: str):
                 401: {'description': 'Verification failed'}
              })
 async def verify(email: Annotated[str, Form()], code: Annotated[str, Form()], response: Response, settings: Annotated[settings.Settings, Depends(settings.get)], return_to: Annotated[str|None, Form()]):
-    expected_code: str = await db.query_one('select code from "LoginCodes" where email=%s', (email,))
+    expected_code: str = await db.query_one('select code from LoginCodes where email=%s', (email,))
     if return_to is not None:
         resp = RedirectResponse(return_to, 303)
     else:
@@ -50,7 +50,7 @@ class AuthAccess(BaseModel):
 
 @router.get('/access')
 async def access_level(email: Annotated[str, Depends(require_user)]) -> AuthAccess:
-    full_access: bool = await db.query_one('select "fullAccess" from "AuthorizedUsers" where email=%s', (email,))
+    full_access: bool = await db.query_one('select fullAccess from AuthorizedUsers where email=%s', (email,))
     return AuthAccess(
         email= email,
         access_level= 'full' if full_access else 'restricted'
@@ -67,7 +67,7 @@ async def logout(req: Request, response: Response, settings: Annotated[settings.
 
 @router.get('/key')
 async def generate_key(description: str, email: Annotated[str, Depends(require_user)]):
-    (key, id, desc, created_on) = await db.query_one('insert into "APIKeys" (email, description) values (%s, %s) returning (key, id, description, to_char("createdOn", \'YYYY-MM-DD\'))', (email, description))
+    (key, id, desc, created_on) = await db.query_one('insert into APIKeys (email, description) values (%s, %s) returning (key, id, description, to_char(createdOn, \'YYYY-MM-DD\'))', (email, description))
     return {'key': key, 'id': id, 'description': desc, 'createdOn': created_on}
 
 @router.delete('/key')

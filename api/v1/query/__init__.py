@@ -42,7 +42,7 @@ async def query_base(
     if resp is not None:
         set_query_headers(hreq, resp)
     full_access: bool = await db.query_one(
-        'select "fullAccess" from "AuthorizedUsers" where email=%s', (email,)
+        'select fullAccess from AuthorizedUsers where email=%s', (email,)
     )
 
     print(
