@@ -35,7 +35,7 @@ async def verify(email: Annotated[str, Form()], code: Annotated[str, Form()], re
         resp = response
     if expected_code.lower() == code.lower():
         async with db.pool.connection() as conn:
-            await conn.execute('delete from "LoginCodes" where email=%s', (email,))
+            await conn.execute('delete from LoginCodes where email=%s', (email,))
         resp.set_cookie('auth_status', enc.f.encrypt(bytes(email, 'utf-8')).hex(), domain=settings.cookie_domain, max_age=259200, path='/', secure=True, httponly=True, samesite='none')
         return resp
     else:
@@ -73,7 +73,7 @@ async def generate_key(description: str, email: Annotated[str, Depends(require_u
 @router.delete('/key')
 async def delete_key(id: int, email: Annotated[str, Depends(require_user)]) -> int:
     async with db.pool.connection() as conn:
-        await conn.execute('delete from "APIKeys" where id = %s and email = %s', (id, email))
+        await conn.execute('delete from APIKeys where id = %s and email = %s', (id, email))
     return id
 
 @router.get('/keys')
@@ -81,7 +81,7 @@ async def list_keys(email: Annotated[str, Depends(require_user)]) -> list[tuple[
     async with db.pool.connection() as conn:
         return await (await conn.execute("""
             select id, description, to_char("createdOn", 'YYYY-MM-DD') as "createdOn"
-                from "APIKeys"
+                from APIKeys
                 where email = %s
                 order by "createdOn" asc
         """, (email,))).fetchall()
