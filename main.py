@@ -62,14 +62,16 @@ def account_page(
     user: Annotated[str, Depends(require_user)],
     db_exists: Annotated[bool, Depends(user_db_exists)],
     access: Annotated[AuthAccess, Depends(access_level)],
-    api_keys: Annotated[list[tuple[int, str, str]], Depends(list_keys)]
+    api_keys: Annotated[list[tuple[int, str, str]], Depends(list_keys)],
+    embedded: bool = False
 ):
     return templates.TemplateResponse(request, 'account.html',
         {
             'user': user,
             'has_db': db_exists,
             'full_access': access.access_level == 'full',
-            'api_keys': [{'id': key[0], 'description': key[1], 'createdOn': key[2]} for key in api_keys]
+            'api_keys': [{'id': key[0], 'description': key[1], 'createdOn': key[2]} for key in api_keys],
+            'embedded': embedded
         }
     )
 

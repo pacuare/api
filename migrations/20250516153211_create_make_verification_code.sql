@@ -1,8 +1,8 @@
 create function MakeVerificationCode (userEmail text, out result text) returns text language plpgsql as
 $$ begin
-    delete from LoginCodes
+    delete from logincodes
            where email = userEmail;
-    insert into LoginCodes (email)
+    insert into logincodes (email)
             values (userEmail)
             returning code into result;
 end $$;

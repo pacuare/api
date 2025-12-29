@@ -11,3 +11,5 @@ wheels/
 
 .env
 .ropeproject/
+
+static/css/tailwind.css

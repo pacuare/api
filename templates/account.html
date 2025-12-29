@@ -7,6 +7,13 @@
 {% block content %}
 {{partials.access_banner(email=user, full_access=full_access)}}
 <hr>
+<p class="text-center">
+    {% if not embedded %}
+    <a href="/">Home</a> |
+    {% endif %}
+    <a href="/v1/auth/logout">Sign Out</a>
+</p>
+<hr>
 <template x-if="loading">
     <p>Please wait...</p>
 </template>

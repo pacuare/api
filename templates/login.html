@@ -2,7 +2,7 @@
 {% import "forms.html" as forms %}
 {% block title %}Log In{% endblock title %}
 {% block content %}
-<h1>Log In</h1>
+<h1 class="text-center">Log In</h1>
 <form x-data="loginForm" action="/v1/auth/verify" method="post">
     <input type="hidden" name="return_to" value="{{ return or '/' }}">
     <fieldset>
