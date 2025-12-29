@@ -73,7 +73,7 @@ async def query(
 ) -> QueryResponse:
     return await query_base(email, req, settings, hreq, resp)
 
-@router.post("/html")
+@router.post(".html")
 def query_html(req: Request, resp: Annotated[QueryResponse, Depends(query)]):
     return templates.TemplateResponse(req, 'table.html', {'columns': resp.columns, 'rows': resp.values})
 
