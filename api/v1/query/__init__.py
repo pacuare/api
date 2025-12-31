@@ -50,7 +50,7 @@ async def query_base(
         + (settings.database_data if full_access else utils.get_user_database(email))
     )
 
-    async with db.pool.connection() if full_access else user_db.open(email) as conn:
+    async with user_db.open_db(settings.database_data) if full_access else user_db.open_for(email) as conn:
         res = await conn.execute(cast(Query, req.query), tuple(req.params or []))
 
         return QueryResponse(

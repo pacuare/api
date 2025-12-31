@@ -1,13 +1,12 @@
 from typing import Annotated, Literal
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from api.v1.auth import utils
 from api.v1.auth.utils import require_user
 from api.v1.db import user_db
-from shared import db
-from shared import settings
+from shared import db, settings
 from shared.settings import Settings
-
 
 router = APIRouter()
 
@@ -28,7 +27,7 @@ async def create_user_db(email: Annotated[str, Depends(require_user)], settings:
         raise HTTPException(409, 'Database already exists')
 
     if db_exists and refresh == 'refresh':
-        async with user_db.open(email) as conn:
+        async with user_db.open_for(email) as conn:
             await conn.execute('drop table pacuare_raw')
 
     async with db.pool.connection() as conn:
@@ -38,5 +37,5 @@ async def create_user_db(email: Annotated[str, Depends(require_user)], settings:
         if not (db_exists and refresh == 'refresh'):
             await conn.execute('create database {}'.format(db_name))
         await conn.execute('select InitUserDatabase(%s, %s, %s)', (settings.database_url_base, settings.database_data, email))
-    
+
     return db_name
