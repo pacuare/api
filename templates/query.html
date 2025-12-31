@@ -7,15 +7,15 @@
 {% block content %}
 
 <form class="flex flex-col lg:flex-row w-full h-full items-stretch justify-stretch gap-2 max-h-[calc(100vh-(var(--spacing)*20))]" method="post">
-    <div class="card card-border flex-1 relative overflow-hidden" x-data="editor">
+    <div class="card card-border flex-1 relative overflow-hidden rounded-xl" x-data="editor">
         <div class="card-body p-0 w-full">
             <input type="hidden" x-ref="initQuery" value="{{query}}">
-            <textarea name="query" class="card border-none hljs absolute text-transparent! caret-white! font-mono! text-base h-full w-full m-0 px-3 py-3 resize-none box-border" x-bind="editor" x-ref="editor"></textarea>
+            <textarea name="query" class="card rounded-none border-none hljs absolute text-transparent! caret-white! font-mono! text-base h-full w-full m-0 px-3 py-3 resize-none box-border" x-bind="editor" x-ref="editor"></textarea>
             <pre x-bind="overlay" x-ref="overlay" class="absolute font-mono pointer-events-none text-base m-0 px-3 py-3 h-full w-full border-none whitespace-pre-wrap wrap-break-word border border-transparent overflow-hidden bg-transparent!" style="color: rgb(220, 207, 143)"><code class="max-w-[calc(100%-(var(--spacing)*12))] overflow-clip wrap-break-word text-[rgb(220, 207, 143)] bg-transparent!" x-html="output"></code></pre>
         </div>
     </div>
-    <button type="submit" class="btn btn-ghost btn-square place-items-center self-center not-lg:w-full lg:h-full rounded-lg" title="Query">{{icons.play()}}</button>
-    <div class="flex-1 card card-border rounded-lg overflow-auto">
+    <button type="submit" class="btn btn-ghost btn-square place-items-center self-center not-lg:w-full lg:h-full rounded-xl" title="Query">{{icons.play()}}</button>
+    <div class="flex-1 card card-border rounded-xl overflow-auto">
         {% if result %}
             {{table.results_table(result.columns, result.values, 'table')}}
         {% endif %}
