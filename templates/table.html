@@ -1,4 +1,5 @@
-<table>
+{% macro results_table(columns, rows, class='') %}
+<table class="{{class}}">
     <thead>
         <tr>
             {% for col in columns %}
@@ -16,3 +17,6 @@
         {% endfor %}
     </tbody>
 </table>
+{% endmacro %}
+
+{{results_table(columns, rows)}}

@@ -1,0 +1,32 @@
+{% import "partials.html" as partials %}
+
+{% macro link(text, to) %}
+<li><a href="{{to}}">{{text}}</a></li>
+{% endmacro %}
+
+{% macro section(text) %}
+<li class="uppercase text-base-content/50 px-3 pt-2">{{text}}</li>
+{% endmacro %}
+
+{% macro menu(user, full_access) %}
+<ul class="menu bg-base-200 min-h-full w-80 p-4">
+    {% if user %}
+    <div class="pb-2">
+    {{ partials.access_banner(user, full_access) }}
+    </div>
+    {% endif %}
+
+    {{ link("Pacuare Reserve", "/") }}
+
+    {{ section("Tools") }}
+    {% if user %}
+    {{ link("Account Settings", "/account") }}
+    {{ link("Query Tool", "/query") }}
+    {% else %}
+    {{ link("Log In", "/login") }}
+    {% endif %}
+
+    {{ section("Documentation") }}
+    {{ link("Scalar API Docs", "/v1/scalar") }}
+</ul>
+{% endmacro %}

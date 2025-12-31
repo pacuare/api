@@ -3,7 +3,7 @@
 {%- endmacro %}
 {% macro otp_input(name) -%}
 {# https://lexingtonthemes.com/blog/how-to-build-an-otp-input-group-with-tailwind-css-and-alpinejs #}
-<div class="grid" x-data="otpInput" style="position: relative" >
+<div class="flex flex-row gap-1" x-data="otpInput" style="position: relative" >
     <input
         id="{{name}}"
         name="{{name}}"
@@ -19,7 +19,7 @@
         aria-label="Verification Code"
     />
     <template x-for="(digit, i) in digits" x-bind:key="i">
-        <input readonly :value="digit" style="text-align: center" :style="{outline: isFocused && value.length == i && 'var(--pico-outline-width) solid var(--pico-primary-focus)'}">
+        <input readonly :value="digit" class="input rounded-full text-center" :class="isFocused && value.length == i && 'outline outline-secondary'" placeholder="•">
     </template>
 </div>
 {%- endmacro %}

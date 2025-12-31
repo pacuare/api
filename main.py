@@ -3,14 +3,16 @@ from typing import Annotated
 
 from fastapi import Depends, FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.params import Query
+from fastapi.params import Form, Query
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from httpx import Auth
 
 from api.v1 import app as apiv1
 from api.v1.auth import AuthAccess, access_level, list_keys
 from api.v1.auth.utils import get_user, require_user
 from api.v1.db import user_db_exists
+from api.v1.query import QueryRequest, QueryResponse, query_form
 from shared import db, templates
 
 
@@ -70,6 +72,36 @@ def account_page(
             'full_access': access.access_level == 'full',
             'api_keys': [{'id': key[0], 'description': key[1], 'createdOn': key[2]} for key in api_keys],
             'embedded': embedded
+        }
+    )
+
+@app.get('/query')
+def query_page(
+    request: Request,
+    user: Annotated[str, Depends(require_user)],
+    access: Annotated[AuthAccess, Depends(access_level)]
+):
+    return templates.TemplateResponse(request, 'query.html',
+        {
+            'user': user,
+            'full_access': access.access_level == 'full'
+        }
+    )
+
+@app.post('/query')
+def query_page_response(
+    request: Request,
+    req: Annotated[QueryRequest, Form()],
+    user: Annotated[str, Depends(require_user)],
+    access: Annotated[AuthAccess, Depends(access_level)],
+    result: Annotated[QueryResponse, Depends(query_form)]
+):
+    return templates.TemplateResponse(request, 'query.html',
+        {
+            'user': user,
+            'full_access': access.access_level == 'full',
+            'query': req.query,
+            'result': result
         }
     )
 

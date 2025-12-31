@@ -5,64 +5,53 @@
 {% block title %}My Account{% endblock %}
 
 {% block content %}
-{{partials.access_banner(email=user, full_access=full_access)}}
-<hr>
-<p class="text-center">
-    {% if not embedded %}
-    <a href="/">Home</a> |
-    {% endif %}
-    <a href="/v1/auth/logout">Sign Out</a>
-</p>
-<hr>
+<h1 class="text-center text-2xl font-bold">Account Settings</h1>
+
 <template x-if="loading">
     <p>Please wait...</p>
 </template>
 
 {% if not full_access %}
-<article x-data="personalDb">
-    <h2>Personal Database</h2>
-    {% if has_db %}
-    <small style="display:block;margin-bottom: 10px;">Keep your database in sync with the master copy.</small>
-    <div role="group">
-        <button @click="refresh" class="secondary">Refresh</button>
-        <button @click="recreate" class="contrast">Recreate</button>
+<div class="card card-border max-w-6xl mx-auto my-2" x-data="personalDb">
+    <div class="card-body">
+        <h2 class="card-title">Personal Database</h2>
+        {% if has_db %}
+        <small style="display:block;margin-bottom: 10px;">Keep your database in sync with the master copy.</small>
+        <div role="group" class="card-actions justify-end">
+            <button @click="refresh" class="btn">Refresh</button>
+            <button @click="recreate" class="btn btn-error">Recreate</button>
+        </div>
+        {% else %}
+        <small style="display:block;margin-bottom: 10px;">Your personal database does not exist. Create it to start running queries.</small>
+        <button @click="create" class="btn btn-primary self-end">Create</button>
+        {% endif %}
     </div>
-    {% else %}
-    <small style="display:block;margin-bottom: 10px;">Your personal database does not exist. Create it to start running queries.</small>
-    <button @click="create" style="display:block">Create</button>
-    {% endif %}
-</article>
+</div>
 {% endif %}
 
 <script>window.serverApiKeys = {{api_keys|tojson}}</script>
-<article x-data="apiKeys">
-    <h2>API Keys</h2>
-    <template x-if="newKey">
-        <div>
-            <hr>
-            <em>Your new key is <code x-text="newKey"></code>. It will not be shown again.</em>
-            <hr>
-        </div>
-    </template>
-    <ul style="list-style-type: none !important;">
-        <template x-for="key in keys">
-            <li style="list-style-type: none !important;" class="flex flex-row justify-between items-center">
-                <p x-text="key.description" class="mb-0!"></p>
-                <button @click="deleteKey" x-bind:data-id="key.id" class="block" style="
-                    --pico-primary-background: red;
-                    --pico-primary-border: red;
-                    --pico-primary-hover-background: #aa0000;
-                    --pico-primary-hover-border: #aa0000;"
-                >{{icons.trash()}}</button>
-            </li>
+<div class="card card-border max-w-6xl mx-auto my-2" x-data="apiKeys">
+    <div class="card-body">
+        <h2 class="card-title">API Keys</h2>
+        <template x-if="newKey">
+            <div class="prose alert alert-success alert-soft max-w-full my-2 flex self-stretch">
+                Your new key is <code x-text="newKey"></code>. It will not be shown again.
+            </div>
         </template>
-        <hr>
-        <form role="group" onsubmit="event.preventDefault()">
-            <input x-model="desc" placeholder="Description">
-            <button @click="create">New</button>
+        <ul class="list w-full">
+            <template x-for="key in keys">
+                <li style="list-style-type: none !important;" class="flex flex-row list-row justify-between items-center px-0">
+                    <p x-text="key.description" class="mb-0!"></p>
+                    <button @click="deleteKey" x-bind:data-id="key.id" class="btn btn-error btn-square place-items-center block">{{icons.trash(s=20)}}</button>
+                </li>
+            </template>
+        </ul>
+        <form class="join w-full" onsubmit="event.preventDefault()">
+            <input x-model="desc" class="input join-item flex-1" placeholder="Description">
+            <button @click="create" class="btn btn-primary join-item">New</button>
         </form>
-    </ul>
-</article>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

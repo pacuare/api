@@ -1,1 +1,9 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
+
+@source not "./vendor/*";
+
+@plugin "./vendor/daisyui.mjs" {
+    themes: cupcake --default, forest --prefersdark;
+}
+
+@plugin "@tailwindcss/typography";

@@ -2,24 +2,9 @@
 {% import "partials.html" as partials %}
 {% block title %}API Documentation{% endblock %}
 {% block content %}
-{% if user %}
-{{partials.access_banner(email=user, full_access=full_access)}}
-<hr>
-<p class="text-center">
-    <a href="/account">Account Settings</a> |
-    <a href="/v1/auth/logout">Sign Out</a>
-</p>
-<hr>
-{% else %}
-<a href="/login" class="block text-center">Sign In</a>
-<hr>
-{% endif %}
-<h1>Documentation Versions</h1>
-<ul>
-    {% for v in versions %}
-    <li>
-        {{ v }} &mdash; <a href="/{{v}}/scalar">Documentation</a>
-    </li>
-    {% endfor %}
-</ul>
+<article class="prose dark:prose-invert mx-auto">
+<h1>Welcome to Pacuare Reserve</h1>
+<p>Welcome to the Pacuare Reserve developer portal!</p>
+<p>This documentation is meant to help you get started with the Pacuare data platform. We recommend starting with the SQL quickstart, as it goes over some background information about the database and data structure. After that, feel free to get started experimenting with Python or dive right into the API.</p>
+</article>
 {% endblock %}

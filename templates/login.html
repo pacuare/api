@@ -3,10 +3,8 @@
 {% import "partials.html" as partials %}
 {% block title %}Log In{% endblock title %}
 {% block content %}
-{% if not embedded %}
-<h1 class="text-center">Log In</h1>
-{% endif %}
-<form x-data="loginForm" action="/v1/auth/verify" method="post">
+<h1 class="text-2xl font-bold text-center pb-2">Log In</h1>
+<form x-data="loginForm" action="/v1/auth/verify" method="post" class="flex flex-col items-stretch max-w-xl m-auto">
     {% if error %}
     {% call partials.banner(danger=True) %}
     Authentication failed
@@ -17,21 +15,19 @@
         Authentication failed
         {% endcall %}
     </template>
-    <hr>
-    <input type="hidden" name="return_to" value="{{ return or '/' }}">
-    <fieldset>
-        <label>
-            Email
-            <input type="email" name="email" x-model="email">
-        </label>
+    <input type="hidden" name="return_to" value="{{ return or '/' }}"/>
+
+    <fieldset class="fieldset flex flex-1 flex-col items-stretch">
+        <input type="email" name="email" x-model="email" class="input block w-full" placeholder="Email"/>
+
         <template x-if="!otpVisible">
-            <button @click="sendOtp" style="display:block;width:100%">Log In</button>
+            <button @click="sendOtp" class="btn btn-neutral block">Log In</button>
         </template>
         <template x-if="otpVisible">
-            <div>
-                <label for="code">Verification Code</label>
+            <div class="w-full flex flex-col">
+                <label for="code" class="label py-1 text-center block w-full">Verification Code</label>
                 {{ forms.otp_input("code") }}
-                <button type="submit">Log In</button>
+                <button type="submit" class="btn btn-primary block mt-2 w-full">Log In</button>
             </div>
         </template>
     </fieldset>

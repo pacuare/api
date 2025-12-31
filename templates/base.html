@@ -1,22 +1,33 @@
+{% import "icons.html" as icons %}
+{% import "sidebar.html" as sidebar %}
+
 <!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="color-scheme" content="light dark" />
-        <link
-            rel="stylesheet"
-            href="/vendor/pico.jade.min.css"
-        />
         <link rel="stylesheet" href="/css/tailwind.css">
         <script src="/vendor/alpine.min.js" defer></script>
         {% block head %}{% endblock %}
         <title>{% block title %}{% endblock %} — Pacuare</title>
     </head>
     <body>
-        <main class="container pt-10">
-            {% block content %}{% endblock %}
-        </main>
+        <div class="drawer lg:drawer-open">
+            <input id="drawer-check" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content p-10">
+                <label for="drawer-check" aria-label="open sidebar" class="btn btn-square btn-ghost lg:hidden">
+                    <!-- Sidebar toggle icon -->
+                    {{ icons.panel_left_open() }}
+                </label>
+                {% block content %}{% endblock %}
+            </div>
+            <div class="drawer-side">
+                <label for="drawer-check" aria-label="close sidebar" class="drawer-overlay">
+                </label>
+                {{ sidebar.menu(user, full_access) }}
+            </div>
+        </div>
         {% block scripts %}{% endblock %}
     </body>
 </html>
