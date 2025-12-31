@@ -5,16 +5,20 @@
 {% block title %}My Account{% endblock %}
 
 {% block content %}
-<h1 class="text-center text-2xl font-bold">Account Settings</h1>
-
-<template x-if="loading">
-    <p>Please wait...</p>
-</template>
+<h1 class="text-center text-4xl font-bold mb-3">Account Settings</h1>
 
 {% if not full_access %}
 <div class="card card-border max-w-6xl mx-auto my-2" x-data="personalDb">
     <div class="card-body">
         <h2 class="card-title">Personal Database</h2>
+
+        <template x-if="loading">
+            <p class="alert alert-info alert-soft">
+                <span class="animate-spin">{{icons.loader()}}</span>
+                Please wait...
+            </p>
+        </template>
+
         {% if has_db %}
         <small style="display:block;margin-bottom: 10px;">Keep your database in sync with the master copy.</small>
         <div role="group" class="card-actions justify-end">
@@ -35,7 +39,7 @@
         <h2 class="card-title">API Keys</h2>
         <template x-if="newKey">
             <div class="prose alert alert-success alert-soft max-w-full my-2 flex self-stretch">
-                Your new key is <code x-text="newKey"></code>. It will not be shown again.
+                <p>Your new key is <code x-text="newKey"></code>. It will not be shown again.</p>
             </div>
         </template>
         <ul class="list w-full">

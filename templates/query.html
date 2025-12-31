@@ -7,7 +7,7 @@
 {% block content %}
 
 <form class="flex flex-col lg:flex-row w-full h-full items-stretch justify-stretch gap-2 max-h-[calc(100vh-(var(--spacing)*20))]" method="post">
-    <textarea class="textarea card-border rounded-lg flex-1 w-full lg:w-auto font-mono!" name="query" placeholder="Query">{{query}}</textarea>
+    <textarea class="textarea card-border rounded-lg flex-1 w-full lg:w-auto font-mono! resize-none" name="query" placeholder="Query">{{query}}</textarea>
     <button type="submit" class="btn btn-ghost btn-square place-items-center self-center not-lg:w-full lg:h-full rounded-lg" title="Query">{{icons.play()}}</button>
     <div class="flex-1 card card-border rounded-lg overflow-auto">
         {% if result %}
