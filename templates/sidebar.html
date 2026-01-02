@@ -1,4 +1,5 @@
 {% import "partials.html" as partials %}
+{% import "icons.html" as icons %}
 
 {% macro link(text, to) %}
 <li><a href="{{to}}">{{text}}</a></li>
@@ -9,7 +10,7 @@
 {% endmacro %}
 
 {% macro menu(user, full_access) %}
-<ul class="menu bg-base-200 min-h-full w-80 p-4">
+<ul class="menu bg-base-200 min-h-full w-80 p-4 flex flex-col">
     {% if user %}
     <div class="pb-2">
     {{ partials.access_banner(user, full_access) }}
@@ -28,5 +29,11 @@
 
     {{ section("Documentation") }}
     {{ link("Scalar API Docs", "/v1/scalar") }}
+
+    {% if user %}
+    <div class="flex-1 flex flex-col justify-end">
+        {{ link(icons.log_out(16) + "Log Out", "/logout") }}
+    </div>
+    {% endif %}
 </ul>
 {% endmacro %}
