@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
-from psycopg.abc import Params, Query
+
+from psycopg.abc import Params, QueryNoTemplate
 from psycopg_pool import AsyncConnectionPool
 
 from shared import settings
@@ -14,7 +15,7 @@ async def lifespan():
     await pool.close()
 
 
-async def query_one[T](sql: Query, params: Params = ()) -> T:
+async def query_one[T](sql: QueryNoTemplate, params: Params = ()) -> T:
     async with pool.connection() as conn:
         res = await (await conn.execute(sql, params)).fetchone()
         assert res is not None

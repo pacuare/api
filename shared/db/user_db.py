@@ -45,9 +45,9 @@ async def create_user_db(
     async with db.pool.connection() as conn:
         await conn.set_autocommit(True)
         if db_exists and refresh == "recreate":
-            await conn.execute("drop database {}".format(db_name))  # ty:ignore[invalid-argument-type]
+            await conn.execute("drop database {}".format(db_name))  # ty:ignore[no-matching-overload]
         if not (db_exists and refresh == "refresh"):
-            await conn.execute("create database {}".format(db_name))  # ty:ignore[invalid-argument-type]
+            await conn.execute("create database {}".format(db_name))  # ty:ignore[no-matching-overload]
         await conn.execute(
             "select InitUserDatabase(%s, %s, %s)",
             (settings.database_url_base, settings.database_data, email),
