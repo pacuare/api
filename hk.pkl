@@ -7,12 +7,7 @@ local linters = new Mapping<String, Step> {
   ["ruff"] = Builtins.ruff
   ["ty"] = Ty.ty
   ["yq"] = Builtins.yq
-
-  // define a custom linter
-  ["pkl"] {
-    glob = "*.pkl"
-    check = "pkl eval {{files}} >/dev/null"
-  }
+  ["pkl"] = Builtins.pkl
 }
 
 hooks {
