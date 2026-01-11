@@ -6,7 +6,7 @@
   },
   "steps": {
     "build": {
-      "commands": ["...", "mise check", "mise tailwind"]
+      "commands": ["...", "mise check", "mise tailwind", "mise build"]
     }
   },
   "deploy": {
