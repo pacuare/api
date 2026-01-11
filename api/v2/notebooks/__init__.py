@@ -8,6 +8,7 @@ from sprites.sprite import Sprite
 
 from api.v1.auth.utils import GetUserDatabase
 from shared.sprites import GetSpritesClient
+from shared.sprites.services import Service
 
 router = APIRouter()
 
@@ -20,7 +21,7 @@ GetSpriteName = Annotated[str, Depends(sprite_name)]
 
 
 @router.post("/")
-def create_sprite(sprites: GetSpritesClient, name: GetSpriteName):
+async def create_sprite(sprites: GetSpritesClient, name: GetSpriteName):
     print(f"creating sprite {name}")
 
     try:
@@ -34,14 +35,17 @@ def create_sprite(sprites: GetSpritesClient, name: GetSpriteName):
     sprite.command("pip", "install", "marimo").run()
     sprite.create_checkpoint("basic-marimo")
 
-    create_service(
+    svc = Service(
         sprite,
         "marimo",
         "python3",
-        ["-m", "marimo", "edit", "-p", "8080"],
-        http_port=8080,
+        "-m",
+        "marimo",
+        "edit",
+        "-p",
+        "8080",
     )
-    start_service(sprite, "marimo", 0)
+    await svc.start()
 
     return {"name": name, "url": sprite.url}
 
