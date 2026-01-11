@@ -14,7 +14,6 @@
     "build": {
       "commands": [
         "...",
-        "git init",
         "mise check",
         "mise tailwind",
         "mise build"

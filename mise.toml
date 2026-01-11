@@ -8,7 +8,6 @@ uv = "latest"
 pkl = "latest"
 hk = "latest"
 yq = "latest"
-jq = "latest"
 
 [settings]
 python.uv_venv_auto = true
@@ -22,7 +21,7 @@ ty = "ty check"
 ruff = "ruff check"
 format = "ruff format"
 check = "mise ty && mise ruff"
-build = "hk r py-compile -a"
+build = "python -m compileall . -j12"
 ci = "mise build && mise check && mise test"
 tailwind = "tailwindcss -i tailwind.css -o static/css/tailwind.css"
 tailwind-dev = "mise run tailwind -w"
