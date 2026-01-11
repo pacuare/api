@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from httpx import NetworkError
 from sprites import URLSettings
-from sprites.services import create_service, start_service
 from sprites.sprite import Sprite
 
 from api.v1.auth.utils import GetUserDatabase
