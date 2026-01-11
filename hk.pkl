@@ -1,19 +1,17 @@
 amends "package://github.com/jdx/hk/releases/download/v1.29.0/hk@1.29.0#/Config.pkl"
+import "https://pkl.farthergate.com/hk/Ty.pkl"
 import "package://github.com/jdx/hk/releases/download/v1.29.0/hk@1.29.0#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
   // uses builtin ruff linter config
   ["ruff"] = Builtins.ruff
+  ["ty"] = Ty.ty
+  ["yq"] = Builtins.yq
 
   // define a custom linter
   ["pkl"] {
     glob = "*.pkl"
     check = "pkl eval {{files}} >/dev/null"
-  }
-
-  ["ty"] {
-    glob = List("**/*.py", "**/*.pyi")
-    check = "ty check --force-exclude {{files}}"
   }
 }
 
