@@ -10,9 +10,10 @@ class Settings(BaseSettings):
     resend_api_key: str
     fernet_key: str
     cookie_domain: str = '.pacuare.dev'
+    sprites_token: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
 @lru_cache
 def get() -> Settings:
-    return Settings()
+    return Settings()  # pyright: ignore[reportCallIssue]

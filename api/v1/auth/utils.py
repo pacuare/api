@@ -19,10 +19,16 @@ async def get_user(
 
     return None
 
-async def require_user(email: Annotated[str|None, Depends(get_user)]) -> str:
+GetUser = Annotated[str|None, Depends(get_user)]
+
+async def require_user(email: GetUser) -> str:
     if email is None:
         raise HTTPException(403, "Forbidden")
     return email
 
-def get_user_database(email: str) -> str:
+RequireUser = Annotated[str, Depends(require_user)]
+
+def get_user_database(email: RequireUser) -> str:
     return 'user_' + email.replace('@', '__').replace('.', '_')
+
+GetUserDatabase = Annotated[str, Depends(get_user_database)]

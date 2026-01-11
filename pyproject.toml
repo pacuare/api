@@ -19,6 +19,7 @@ dependencies = [
     "pandas>=2.2.3",
     "scalar-fastapi>=1.0.3",
     "clerk-backend-api>=4.0.0",
+    "sprites-py>=0.0.1a1",
 ]
 
 [tool.poe.tasks]
