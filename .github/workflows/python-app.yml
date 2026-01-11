@@ -33,5 +33,6 @@ jobs:
           DATABASE_URL: ""
           RESEND_API_KEY: ""
           FERNET_KEY: ""
+          SPRITES_TOKEN: ""
         run: |
           mise ci
