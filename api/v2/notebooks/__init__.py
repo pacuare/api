@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from httpx import NetworkError
 from sprites import URLSettings
 from sprites.services import create_service, start_service
 from sprites.sprite import Sprite
@@ -15,15 +16,24 @@ def sprite_name(db_name: GetUserDatabase) -> str:
     return "pacuare-" + db_name.replace("_", "-")
 
 
+GetSpriteName = Annotated[str, Depends(sprite_name)]
+
+
 @router.post("/")
-def create(sprites: GetSpritesClient, name: Annotated[str, Depends(sprite_name)]):
+def create_sprite(sprites: GetSpritesClient, name: GetSpriteName):
     print(f"creating sprite {name}")
-    sprites.create_sprite(name)
+
+    try:
+        sprites.create_sprite(name)
+    except NetworkError:
+        print(f"failed to create sprite {name}; most likely it already exists")
 
     sprite: Sprite = sprites.sprite(name)
     sprite.update_url_settings(URLSettings("public"))
 
     sprite.command("pip", "install", "marimo").run()
+    sprite.create_checkpoint("basic-marimo")
+
     create_service(
         sprite,
         "marimo",
@@ -34,3 +44,15 @@ def create(sprites: GetSpritesClient, name: Annotated[str, Depends(sprite_name)]
     start_service(sprite, "marimo", 0)
 
     return {"name": name, "url": sprite.url}
+
+
+@router.delete("/")
+def delete_sprite(sprites: GetSpritesClient, name: GetSpriteName):
+    sprites.delete_sprite(name)
+
+
+@router.post("/reset")
+def reset_sprite(sprites: GetSpritesClient, name: GetSpriteName):
+    sprite: Sprite = sprites.sprite(name)
+    cp = sprite.list_checkpoints("basic-marimo")
+    sprite.restore_checkpoint(cp.id)
