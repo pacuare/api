@@ -47,12 +47,14 @@ def create_sprite(sprites: GetSpritesClient, name: GetSpriteName):
 
 
 @router.delete("/")
-def delete_sprite(sprites: GetSpritesClient, name: GetSpriteName):
+def delete_sprite(sprites: GetSpritesClient, name: GetSpriteName) -> str:
     sprites.delete_sprite(name)
+    return name
 
 
 @router.post("/reset")
-def reset_sprite(sprites: GetSpritesClient, name: GetSpriteName):
+def reset_sprite(sprites: GetSpritesClient, name: GetSpriteName) -> str:
     sprite: Sprite = sprites.sprite(name)
     cp = sprite.list_checkpoints("basic-marimo")
     sprite.restore_checkpoint(cp.id)
+    return name
