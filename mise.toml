@@ -5,6 +5,8 @@ python = "latest"
 ruff = "latest"
 uv = "latest"
 "pipx:ty" = "latest"
+pkl = "latest"
+hk = "latest"
 
 [settings]
 python.uv_venv_auto = true
@@ -17,7 +19,7 @@ dev = "fastapi dev main.py"
 ty = "ty check"
 ruff = "ruff check"
 format = "ruff format"
-check = "mise ty && mise ruff"
+check = "hk check -a"
 build = "python -m compileall ."
 ci = "mise build && mise check && mise test"
 tailwind = "tailwindcss -i tailwind.css -o static/css/tailwind.css"
