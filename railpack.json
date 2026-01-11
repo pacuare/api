@@ -1,15 +1,24 @@
 {
   "$schema": "https://schema.railpack.com",
-  "provider": "python",
+  "buildAptPackages": [
+    "git"
+  ],
+  "deploy": {
+    "startCommand": "mise migrate && mise start"
+  },
   "packages": {
     "github:tailwindlabs/tailwindcss": "latest"
   },
+  "provider": "python",
   "steps": {
     "build": {
-      "commands": ["...", "mise check", "mise tailwind", "mise build"]
+      "commands": [
+        "...",
+        "git init",
+        "mise check",
+        "mise tailwind",
+        "mise build"
+      ]
     }
-  },
-  "deploy": {
-    "startCommand": "mise migrate && mise start"
   }
 }

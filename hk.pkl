@@ -1,13 +1,15 @@
 amends "package://github.com/jdx/hk/releases/download/v1.29.0/hk@1.29.0#/Config.pkl"
-import "https://pkl.farthergate.com/hk/Ty.pkl"
+import "https://pkl.farthergate.com/hk/Python.pkl"
 import "package://github.com/jdx/hk/releases/download/v1.29.0/hk@1.29.0#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
   // uses builtin ruff linter config
   ["ruff"] = Builtins.ruff
-  ["ty"] = Ty.ty
+  ["ty"] = Python.ty
   ["yq"] = Builtins.yq
   ["pkl"] = Builtins.pkl
+  ["py-compile"] = Python.pyCompile
+  ["jq"] = Builtins.jq
 }
 
 hooks {
@@ -27,5 +29,11 @@ hooks {
   }
   ["check"] {
     steps = linters
+  }
+
+  ["py-compile"] {
+    steps = new {
+      ["py-compile"] = Python.pyCompile
+    }
   }
 }
