@@ -1,2 +1,22 @@
 [tools]
+"github:facebook/watchman" = "latest"
 "github:tailwindlabs/tailwindcss" = "latest"
+python = "latest"
+ruff = "latest"
+uv = "latest"
+"pipx:ty" = "latest"
+
+[settings]
+python.uv_venv_auto = true
+
+[tasks]
+migrate = "yoyo apply -f -a -d $DATABASE_URL"
+start = "fastapi run main.py"
+test = "pytest"
+dev = "fastapi dev main.py"
+ty = "ty check"
+ruff = "ruff check"
+format = "ruff format"
+check = "mise ty && mise ruff"
+tailwind = "tailwindcss -i tailwind.css -o static/css/tailwind.css"
+tailwind-dev = "mise run tailwind -w"

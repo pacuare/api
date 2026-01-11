@@ -10,4 +10,5 @@ from shared.settings import Settings
 def client(settings: Annotated[Settings, Depends(settings.get)]):
     return SpritesClient(settings.sprites_token)
 
+
 GetSpritesClient = Annotated[SpritesClient, Depends(client)]

@@ -42,7 +42,7 @@ async def query_base(
     if resp is not None:
         set_query_headers(hreq, resp)
     full_access: bool = await db.query_one(
-        'select fullAccess from AuthorizedUsers where email=%s', (email,)
+        "select fullAccess from AuthorizedUsers where email=%s", (email,)
     )
 
     print(
@@ -50,7 +50,11 @@ async def query_base(
         + (settings.database_data if full_access else utils.get_user_database(email))
     )
 
-    async with user_db.open_db(settings.database_data) if full_access else user_db.open_for(email) as conn:
+    async with (
+        user_db.open_db(settings.database_data)
+        if full_access
+        else user_db.open_for(email) as conn
+    ):
         res = await conn.execute(cast(Query, req.query), tuple(req.params or []))
 
         return QueryResponse(
@@ -73,9 +77,13 @@ async def query(
 ) -> QueryResponse:
     return await query_base(email, req, settings, hreq, resp)
 
+
 @router.post(".html")
 def query_html(req: Request, resp: Annotated[QueryResponse, Depends(query)]):
-    return templates.TemplateResponse(req, 'table.html', {'columns': resp.columns, 'rows': resp.values})
+    return templates.TemplateResponse(
+        req, "table.html", {"columns": resp.columns, "rows": resp.values}
+    )
+
 
 @router.post("/form")
 async def query_form(

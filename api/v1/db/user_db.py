@@ -8,8 +8,11 @@ from shared import settings
 
 @asynccontextmanager
 async def open_db(db: str):
-    async with await psycopg.AsyncConnection.connect(settings.get().database_url_base + '/' + db) as conn:
+    async with await psycopg.AsyncConnection.connect(
+        settings.get().database_url_base + "/" + db
+    ) as conn:
         yield conn
+
 
 @asynccontextmanager
 async def open_for(email: str):

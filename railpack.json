@@ -6,13 +6,10 @@
   },
   "steps": {
     "build": {
-      "commands": [
-        "...",
-        "poe tailwind"
-      ]
+      "commands": ["...", "mise check", "mise tailwind"]
     }
   },
   "deploy": {
-    "startCommand": "poe migrate && poe start"
+    "startCommand": "mise migrate && mise start"
   }
 }
