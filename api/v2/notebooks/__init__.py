@@ -1,3 +1,4 @@
+import json
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -23,16 +24,21 @@ GetSpriteName = Annotated[str, Depends(sprite_name)]
 async def create_sprite(sprites: GetSpritesClient, name: GetSpriteName):
     print(f"creating sprite {name}")
 
+    sprite: Sprite
+
     try:
-        sprites.create_sprite(name)
+        sprite = sprites.create_sprite(name)
     except NetworkError:
         print(f"failed to create sprite {name}; most likely it already exists")
+        sprite = sprites.get_sprite(name)
 
-    sprite: Sprite = sprites.sprite(name)
     sprite.update_url_settings(URLSettings("public"))
 
     sprite.command("pip", "install", "marimo").run()
-    sprite.create_checkpoint("basic-marimo")
+    stream = sprite.create_checkpoint("basic-marimo")
+
+    for msg in stream:
+        print(json.dumps({"type": msg.type, "data": msg.data}))
 
     svc = Service(
         sprite,
