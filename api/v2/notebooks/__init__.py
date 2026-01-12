@@ -2,7 +2,6 @@ import json
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from httpx import NetworkError
 from sprites import SpriteError, URLSettings
 from sprites.sprite import Sprite
 
