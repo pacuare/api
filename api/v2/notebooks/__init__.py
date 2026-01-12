@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from httpx import NetworkError
-from sprites import URLSettings
+from sprites import SpriteError, URLSettings
 from sprites.sprite import Sprite
 
 from api.v1.auth.utils import GetUserDatabase
@@ -28,7 +28,7 @@ async def create_sprite(sprites: GetSpritesClient, name: GetSpriteName):
 
     try:
         sprite = sprites.create_sprite(name)
-    except NetworkError:
+    except SpriteError:
         print(f"failed to create sprite {name}; most likely it already exists")
         sprite = sprites.get_sprite(name)
 
