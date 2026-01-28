@@ -6,9 +6,6 @@
   "deploy": {
     "startCommand": "mise migrate && mise start"
   },
-  "packages": {
-    "github:tailwindlabs/tailwindcss": "latest"
-  },
   "provider": "python",
   "steps": {
     "build": {
