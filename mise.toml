@@ -1,5 +1,4 @@
 [tools]
-"github:facebook/watchman" = "latest"
 "github:tailwindlabs/tailwindcss" = "latest"
 python = "latest"
 ruff = "latest"
